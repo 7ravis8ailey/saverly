@@ -3,32 +3,33 @@
 ## Executive Summary
 Saverly is a location-based digital coupon mobile application connecting local businesses in Northeast TN with cost-conscious consumers through a subscription model ($4.99/month). This PRD outlines the development of a React Native mobile app with Supabase backend, migrating from existing Replit/PostgreSQL codebase.
 
-## 📱 Mobile-First Strategy
+## 📱 Mobile-Optimized Web Strategy
 
 ### Target Platforms
-- **Primary**: iOS and Android native apps via React Native
-- **Secondary**: Web app for admin dashboard (React web)
-- **Future**: PWA for broader accessibility
+- **Primary**: Mobile-optimized web app (React PWA)
+- **Secondary**: Desktop web access (same app, responsive)
+- **Admin Dashboard**: Separate React web app for business management
 
-### Why React Native
-- Single codebase for iOS/Android
-- Native performance for location services
-- Push notifications support
-- Camera integration for QR scanning
-- Native UI components
-- Easy deployment to app stores
+### Why Mobile-Optimized Web App
+- No app store approval process - faster deployment
+- Instant updates without app store delays
+- Works on all devices through browser
+- Easy sharing via URL
+- Lower development complexity
+- Still supports PWA features (offline, home screen install)
+- Push notifications via web push API
 
 ## 🏗️ Architecture Overview
 
 ### Frontend Stack
-- **Framework**: React Native (Expo)
-- **Navigation**: React Navigation v6
-- **State Management**: Zustand or Redux Toolkit
-- **UI Library**: React Native Elements + custom components
-- **Maps**: React Native Maps (Google Maps)
-- **QR Code**: react-native-qrcode-scanner
-- **Push Notifications**: Expo Notifications
-- **Location**: Expo Location
+- **Framework**: React 18 + Vite (PWA)
+- **Navigation**: React Router v6
+- **State Management**: Zustand or React Query
+- **UI Library**: Tailwind CSS + shadcn/ui (mobile-optimized)
+- **Maps**: Google Maps JavaScript API
+- **QR Code**: react-qr-code + qr-scanner (camera)
+- **Push Notifications**: Web Push API
+- **Location**: Browser Geolocation API
 
 ### Backend Stack
 - **Backend**: Supabase (PostgreSQL + Auth + Real-time + Edge Functions)
@@ -39,10 +40,13 @@ Saverly is a location-based digital coupon mobile application connecting local b
 - **Edge Functions**: Stripe webhook handling
 
 ### Deployment Strategy
-- **Mobile Apps**: Expo Application Services (EAS) → App Store & Google Play
-- **Admin Web Dashboard**: Netlify (React SPA)
+- **Mobile Web App**: Netlify (React PWA with mobile optimization)
+- **Admin Web Dashboard**: Netlify (React SPA - separate subdomain)
 - **Backend**: Supabase (hosted)
 - **Static Assets**: Supabase Storage or Netlify
+- **Domain Structure**: 
+  - `saverly.app` - Main mobile web app
+  - `admin.saverly.app` - Admin dashboard
 
 ## 🔑 API Key Migration Strategy
 
@@ -183,7 +187,7 @@ CREATE POLICY "Users can create their own redemptions" ON redemptions
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 ```
 
-## 📱 Mobile App Features
+## 📱 Mobile-Optimized Web App Features
 
 ### Core User Flows
 
@@ -277,17 +281,17 @@ CREATE POLICY "Users can create their own redemptions" ON redemptions
 
 ### Project Structure
 ```
-saverly-mobile/
+saverly-web/
 ├── src/
 │   ├── components/          # Reusable UI components
-│   │   ├── ui/             # Base UI components
+│   │   ├── ui/             # shadcn/ui components
 │   │   ├── coupon/         # Coupon-related components
 │   │   └── auth/           # Authentication components
-│   ├── screens/            # Screen components
+│   ├── pages/              # Page components
 │   │   ├── auth/           # Login, register, reset
 │   │   ├── home/           # Main coupon feed
 │   │   ├── profile/        # User profile management
-│   │   └── admin/          # Admin dashboard (web only)
+│   │   └── coupon/         # Coupon details, redemption
 │   ├── services/           # API calls and business logic
 │   │   ├── supabase.ts     # Supabase client
 │   │   ├── auth.ts         # Authentication service
@@ -296,8 +300,10 @@ saverly-mobile/
 │   ├── hooks/              # Custom React hooks
 │   ├── utils/              # Helper functions
 │   ├── types/              # TypeScript definitions
+│   ├── styles/             # Tailwind config and globals
 │   └── constants/          # App constants
-├── assets/                 # Images, fonts, etc.
+├── public/                 # PWA assets, manifest
+├── admin/                  # Separate admin app
 └── docs/                   # Documentation
 ```
 
@@ -305,37 +311,39 @@ saverly-mobile/
 ```json
 {
   "dependencies": {
-    "expo": "~50.0.0",
-    "react-native": "0.73.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^5.0.0",
     "@supabase/supabase-js": "^2.39.0",
-    "@stripe/stripe-react-native": "^0.37.0",
-    "react-navigation": "^6.0.0",
-    "react-native-maps": "^1.10.0",
-    "react-native-qrcode-scanner": "^1.5.0",
-    "expo-location": "~16.5.0",
-    "expo-notifications": "~0.27.0",
+    "@stripe/stripe-js": "^3.0.0",
+    "react-router-dom": "^6.8.0",
+    "@googlemaps/js-api-loader": "^1.16.0",
+    "react-qr-code": "^2.0.0",
+    "qr-scanner": "^1.4.0",
+    "tailwindcss": "^3.4.0",
     "zustand": "^4.4.0",
     "react-hook-form": "^7.48.0",
-    "zod": "^3.22.0"
+    "zod": "^3.22.0",
+    "@tanstack/react-query": "^5.0.0"
   }
 }
 ```
 
 ### Development Workflow
-1. **Local Development**: Expo CLI with hot reload
-2. **Testing**: Jest + React Native Testing Library
+1. **Local Development**: Vite dev server with hot reload
+2. **Testing**: Vitest + React Testing Library
 3. **Type Safety**: TypeScript throughout
 4. **Code Quality**: ESLint + Prettier
 5. **Version Control**: Git with conventional commits
-6. **CI/CD**: GitHub Actions → EAS Build → App Store deployment
+6. **CI/CD**: GitHub Actions → Netlify deployment
 
 ## 🚀 Deployment Strategy
 
-### Mobile App Deployment
-- **Development**: Expo Go app for testing
-- **Staging**: EAS Build preview builds
-- **Production**: EAS Build → App Store & Google Play Store
-- **Updates**: Expo Updates for OTA updates (non-native changes)
+### Web App Deployment
+- **Development**: Local Vite dev server
+- **Staging**: Netlify preview deployments
+- **Production**: Netlify with custom domain (saverly.app)
+- **Updates**: Instant deployment via Git push
 
 ### Web Admin Dashboard
 - **Framework**: React (Vite)

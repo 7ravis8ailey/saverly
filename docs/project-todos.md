@@ -1,4 +1,4 @@
-# Saverly Mobile App - Master Todo List
+# Saverly Mobile-Optimized Web App - Master Todo List
 
 **Project Status**: Planning Phase  
 **Last Updated**: 2025-01-25  
@@ -9,11 +9,11 @@
 ## 🎯 High Priority (Current Sprint)
 
 ### Phase 1: Foundation Setup (Week 1)
-- [ ] **SETUP-001**: Create React Native project with Expo CLI
-  - [ ] Initialize new Expo project
-  - [ ] Configure TypeScript
-  - [ ] Set up project structure
-  - [ ] Install core dependencies
+- [ ] **SETUP-001**: Create React web app with Vite
+  - [ ] Initialize new Vite + React + TypeScript project
+  - [ ] Configure PWA manifest and service worker
+  - [ ] Set up mobile-optimized project structure
+  - [ ] Install core dependencies (Tailwind, shadcn/ui)
 
 - [ ] **SETUP-002**: Set up Supabase project and database
   - [ ] Create Supabase project
@@ -36,9 +36,9 @@
   - [ ] Test authentication flows
 
 - [ ] **SETUP-005**: Set up basic navigation structure
-  - [ ] Install React Navigation
-  - [ ] Create navigation stack
-  - [ ] Implement bottom tab navigation
+  - [ ] Install React Router
+  - [ ] Create route structure
+  - [ ] Implement mobile-optimized navigation
   - [ ] Add authentication guards
 
 ---
