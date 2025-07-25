@@ -9,21 +9,28 @@ When starting a new conversation, the user will say something like:
 
 1. **Read the project files in this exact order:**
    ```
-   /Users/travisbailey/saverly-mobile-project/CLAUDE_INSTRUCTIONS.md (this file)
-   /Users/travisbailey/saverly-mobile-project/saverly-mobile-prd.md
-   /Users/travisbailey/saverly-mobile-project/project-todos.md
+   /Users/travisbailey/Claude Workspace/Saverly/docs/CLAUDE_INSTRUCTIONS.md (this file)
+   /Users/travisbailey/Claude Workspace/Saverly/docs/saverly-mobile-prd.md
+   /Users/travisbailey/Claude Workspace/Saverly/docs/project-todos.md
    ```
 
 2. **Set your working directory:**
    ```bash
-   cd /Users/travisbailey/saverly-mobile-project
+   cd "/Users/travisbailey/Claude Workspace/Saverly"
    ```
 
-3. **Acknowledge what you've learned:**
-   - Current project phase
-   - Last completed tasks
-   - Next priority tasks
+3. **MANDATORY: Create execution plan and update logs:**
+   - Read current todo status and identify next 5-10 actionable tasks
+   - Create a detailed execution plan with time estimates
+   - Update the project-todos.md with any new tasks discovered
+   - Provide a status report showing exactly what you'll work on
+
+4. **Acknowledge what you've learned:**
+   - Current project phase and completion percentage
+   - Last completed tasks (with dates)
+   - Next priority tasks (with your planned approach)
    - Any blockers or dependencies
+   - Your proposed work session agenda
 
 ## 📋 Project Overview (Quick Reference)
 
@@ -130,18 +137,79 @@ saverly-mobile-project/
 
 ## 📝 Communication Protocol
 
-### When User Asks "Where are we?"
-**Standard Response Format:**
-```markdown
-## Current Status - Saverly Mobile Project
+## 🎯 MANDATORY: Execution Planning & User Visibility
 
-**Current Phase**: [Phase name and number]
-**Progress**: [X]% overall ([Y]/[Z] tasks complete)
-**Last Completed**: [Most recent task with date]
-**Currently Working On**: [Active task]
-**Next Priority**: [Next 2-3 tasks]
-**Blockers**: [Any dependencies or issues]
+### 📋 Required Response Template for New Instances
+
+When resuming work, provide this EXACT format so the user can track progress:
+
+```markdown
+# 🚀 Saverly Project - Session Start Report
+
+## 📊 Current Status
+- **Phase**: [Current phase name] ([X]% complete)
+- **Overall Progress**: [Y]% ([completed]/[total] tasks)
+- **Last Session**: [Date] - [What was completed]
+- **Active Work**: [Current task in progress]
+
+## 🎯 Today's Execution Plan
+**Session Goal**: [Primary objective for this session]
+**Time Estimate**: [Estimated work time]
+
+### Next 5 Tasks (In Priority Order):
+1. **[TASK-ID]**: [Task description] 
+   - **Approach**: [How you'll tackle it]
+   - **Time**: [Estimate]
+   - **Dependencies**: [Any blockers]
+
+2. **[TASK-ID]**: [Task description]
+   - **Approach**: [How you'll tackle it]  
+   - **Time**: [Estimate]
+
+[Continue for 3-5 tasks]
+
+## 🚨 Blockers & Dependencies
+- [List any blockers that need user attention]
+- [API keys needed, decisions required, etc.]
+
+## 📈 Success Metrics for This Session
+- [ ] [Specific deliverable 1]
+- [ ] [Specific deliverable 2] 
+- [ ] [Update todos.md with progress]
+
+**Ready to begin? I'll update you every 15-30 minutes with progress.**
 ```
+
+### 🔄 Mid-Session Progress Updates
+
+**MANDATORY**: Every 15-30 minutes, provide updates in this format:
+
+```markdown
+## ⏰ Progress Update - [Time]
+
+### ✅ Completed (Last 30 min):
+- [x] [Task completed with details]
+- [x] [Another completed task]
+
+### 🔄 Currently Working On:
+- **[TASK-ID]**: [Current task]  
+- **Status**: [X]% complete
+- **Next Step**: [What you're doing next]
+- **ETA**: [When you expect to finish]
+
+### 🆙 Coming Up Next:
+- [Next 1-2 tasks in queue]
+
+### 🚨 Issues/Discoveries:
+- [Any problems encountered]
+- [New tasks discovered and added to todos]
+```
+
+### When User Asks "Where are we?"
+Always provide the full status template above, plus:
+- Show exact file changes made
+- List new todos added
+- Highlight any decisions needed from user
 
 ### When User Asks for Next Steps
 1. Check current todos
@@ -189,11 +257,29 @@ eas submit
 
 ### Before Ending Session (MANDATORY)
 - [ ] All todos.md updates completed
-- [ ] Progress percentages updated
+- [ ] Progress percentages updated  
 - [ ] New tasks documented
 - [ ] Current work status noted
 - [ ] Any blockers or dependencies documented
+- [ ] **Create session log using template**: Copy `docs/session-log-template.md` to `docs/sessions/session-[YYYYMMDD-HHMM].md` and fill it out completely
+- [ ] Git commit with descriptive message including session summary
 - [ ] Files saved and organized
+- [ ] Next session priorities clearly documented
+
+### 📋 Session Logging (MANDATORY)
+Every Claude instance MUST create a detailed session log:
+
+1. **Copy the template**: `cp docs/session-log-template.md docs/sessions/session-$(date +%Y%m%d-%H%M).md`
+2. **Fill out completely**: Every section must be completed
+3. **Update every 15-30 minutes**: Keep the user informed of progress
+4. **End with handoff**: Clear instructions for next instance
+
+This creates a **complete audit trail** so the user can:
+- Track exactly what work was done
+- See time estimates vs actual time
+- Understand decision-making process
+- Monitor productivity and identify bottlenecks
+- Have confidence in project progress
 
 ### Testing Next Instance Handoff
 **Ask the user to start a new conversation and say:**
