@@ -1,5 +1,12 @@
-import { useState, useEffect } from 'react'
-import { MagnifyingGlassIcon, MapPinIcon, ClockIcon, TagIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { 
+  MagnifyingGlassIcon, 
+  MapPinIcon, 
+  ClockIcon, 
+  TagIcon,
+  FunnelIcon,
+  SparklesIcon
+} from '@heroicons/react/24/outline'
 import { HeartIcon } from '@heroicons/react/24/solid'
 import type { Coupon, Business } from '../../lib/supabase'
 import { useCoupons } from '../../hooks/useCoupons'
@@ -16,17 +23,18 @@ export function CouponFeed() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'distance' | 'savings' | 'expiring'>('distance')
+  const [showFilters, setShowFilters] = useState(false)
   
   const { coupons, loading, error, refetch } = useCoupons()
   const { location, requesting: locationLoading } = useLocation()
 
   const categories = [
-    { id: 'all', name: 'All' },
-    { id: 'Food & Beverage', name: 'Food & Drink' },
-    { id: 'Retail', name: 'Shopping' },
-    { id: 'Health & Wellness', name: 'Health' },
-    { id: 'Entertainment & Recreation', name: 'Fun' },
-    { id: 'Personal Services', name: 'Services' }
+    { id: 'all', name: 'All', icon: '🏪' },
+    { id: 'Food & Beverage', name: 'Food', icon: '🍕' },
+    { id: 'Retail', name: 'Shopping', icon: '🛍️' },
+    { id: 'Health & Wellness', name: 'Health', icon: '🏥' },
+    { id: 'Entertainment & Recreation', name: 'Fun', icon: '🎬' },
+    { id: 'Personal Services', name: 'Services', icon: '✂️' }
   ]
 
   // Calculate distances and filter coupons
@@ -84,14 +92,29 @@ export function CouponFeed() {
   const displayCoupons = processedCoupons
 
   if (loading || locationLoading) {
-    return <LoadingSpinner />
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner />
+          <p className="text-gray-600 mt-4">Finding the best deals near you...</p>
+        </div>
+      </div>
+    )
   }
 
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error loading coupons</p>
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <TagIcon className="w-8 h-8 text-red-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Unable to Load Deals
+          </h3>
+          <p className="text-red-600 mb-4">
+            {error.message || 'Error loading coupons'}
+          </p>
           <button onClick={refetch} className="btn-primary">
             Try Again
           </button>
@@ -102,112 +125,178 @@ export function CouponFeed() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 safe-top">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
+      {/* Enhanced Header */}
+      <div className="gradient-header safe-top">
+        <div className="px-4 py-6">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold mb-2">
                 Local Deals
-                <span className="ml-2 text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full">
+                <span className="ml-3 text-xs bg-white/20 text-white px-3 py-1 rounded-full">
+                  <SparklesIcon className="w-3 h-3 inline mr-1" />
                   Pro
                 </span>
               </h1>
-              <p className="text-gray-600 text-sm">
+              <p className="text-white/90 text-lg">
                 {location 
                   ? `${displayCoupons?.length || 0} deals near you`
                   : 'Enable location for personalized deals'
                 }
               </p>
             </div>
-            <button className="p-2 text-gray-400 hover:text-gray-600">
+            <button className="p-3 text-white/80 hover:text-white bg-white/10 rounded-full hover:bg-white/20 transition-all">
               <HeartIcon className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative mb-4">
-            <MagnifyingGlassIcon className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+          {/* Enhanced Search Bar */}
+          <div className="search-bar">
+            <MagnifyingGlassIcon className="search-icon" />
             <input
               type="text"
-              placeholder="Search deals or businesses..."
+              placeholder="Search deals, businesses, or categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="search-input text-gray-900 placeholder-gray-500"
             />
-          </div>
-
-          {/* Category Pills */}
-          <div className="flex space-x-2 overflow-x-auto pb-2">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
-                  selectedCategory === category.id
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {category.name}
-              </button>
-            ))}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <FunnelIcon className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Sort Options */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex space-x-4">
-          {[
-            { id: 'distance', name: 'Nearest', icon: MapPinIcon },
-            { id: 'expiring', name: 'Ending Soon', icon: ClockIcon },
-            { id: 'savings', name: 'Best Deals', icon: TagIcon }
-          ].map(option => (
+      {/* Category Pills */}
+      <div className="bg-white border-b border-gray-200 px-4 py-4">
+        <div className="flex space-x-3 overflow-x-auto pb-2">
+          {categories.map(category => (
             <button
-              key={option.id}
-              onClick={() => setSortBy(option.id as any)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                sortBy === option.id
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'text-gray-600 hover:bg-gray-100'
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+                selectedCategory === category.id
+                  ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md transform scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
               }`}
             >
-              <option.icon className="w-4 h-4" />
-              <span>{option.name}</span>
+              <span className="text-base">{category.icon}</span>
+              {category.name}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Coupon List */}
+      {/* Enhanced Sort Options */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="flex space-x-2">
+          {[
+            { id: 'distance', name: 'Nearest', icon: MapPinIcon, desc: 'Closest to you' },
+            { id: 'expiring', name: 'Ending Soon', icon: ClockIcon, desc: 'Limited time' },
+            { id: 'savings', name: 'Best Value', icon: TagIcon, desc: 'Biggest savings' }
+          ].map(option => (
+            <button
+              key={option.id}
+              onClick={() => setSortBy(option.id as any)}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                sortBy === option.id
+                  ? 'bg-primary-100 text-primary-700 shadow-sm transform scale-105'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <option.icon className="w-4 h-4" />
+              <div className="text-left">
+                <div>{option.name}</div>
+                {sortBy === option.id && (
+                  <div className="text-xs text-primary-600">{option.desc}</div>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Results Summary */}
+      {location && (
+        <div className="bg-primary-50 border-b border-primary-100 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-primary-700">
+              <MapPinIcon className="w-4 h-4" />
+              <span className="text-sm font-medium">
+                {displayCoupons?.length || 0} deals found
+                {searchTerm && ` for "${searchTerm}"`}
+                {selectedCategory !== 'all' && ` in ${categories.find(c => c.id === selectedCategory)?.name}`}
+              </span>
+            </div>
+            {(searchTerm || selectedCategory !== 'all') && (
+              <button 
+                onClick={() => {
+                  setSearchTerm('')
+                  setSelectedCategory('all')
+                }}
+                className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Coupon List */}
       <div className="p-4 pb-24">
         {displayCoupons?.length === 0 ? (
-          <div className="text-center py-12">
-            <TagIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No deals found</h3>
-            <p className="text-gray-600 mb-4">
-              Try adjusting your search or category filters
+          <div className="text-center py-16">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <TagIcon className="w-12 h-12 text-gray-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">No deals found</h3>
+            <p className="text-gray-600 mb-6 max-w-sm mx-auto leading-relaxed">
+              {searchTerm || selectedCategory !== 'all' 
+                ? "Try adjusting your search or category filters to find more deals."
+                : "We're working on adding more deals in your area. Check back soon!"
+              }
             </p>
-            <button 
-              onClick={() => {
-                setSearchTerm('')
-                setSelectedCategory('all')
-              }}
-              className="btn-outline"
-            >
-              Clear Filters
-            </button>
+            <div className="space-y-3">
+              <button 
+                onClick={() => {
+                  setSearchTerm('')
+                  setSelectedCategory('all')
+                }}
+                className="btn-primary"
+              >
+                Show All Deals
+              </button>
+              <button 
+                onClick={refetch}
+                className="btn-secondary block"
+              >
+                Refresh Deals
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
-            {displayCoupons?.map(coupon => (
-              <CouponCard
-                key={coupon.id}
-                coupon={coupon}
-                distance={coupon.distance}
-              />
+            {displayCoupons?.map((coupon, index) => (
+              <div key={coupon.id} className="animate-slide-up" style={{animationDelay: `${index * 50}ms`}}>
+                <CouponCard
+                  coupon={coupon}
+                  distance={coupon.distance}
+                />
+              </div>
             ))}
+            
+            {/* Load More Placeholder */}
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-sm">
+                You're all caught up! 🎉
+              </p>
+              <p className="text-gray-400 text-xs mt-1">
+                New deals are added daily
+              </p>
+            </div>
           </div>
         )}
       </div>

@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Import our custom Saverly design system */
+@import './styles/saverly-design.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 @layer base {
   * {
-    @apply border-border;
+    @apply border-gray-200;
   }
   
   body {
@@ -24,36 +27,114 @@
 }
 
 @layer components {
+  /* Enhanced button styles building on our design system */
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5;
   }
   
   .btn-secondary {
-    @apply bg-secondary-500 hover:bg-secondary-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2;
+    @apply bg-white border-2 border-primary-500 text-primary-600 hover:bg-primary-50 hover:border-primary-600 font-semibold py-3 px-6 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
   }
   
   .btn-outline {
-    @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
   }
   
+  /* Enhanced card styles */
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200;
   }
   
+  .card-enhanced {
+    @apply bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1;
+  }
+  
+  /* Modern input styles */
   .input-field {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200;
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white placeholder-gray-400 text-gray-900;
   }
   
+  .input-field:focus {
+    @apply shadow-sm;
+  }
+  
+  /* Enhanced mobile navigation */
   .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50;
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 z-50;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center py-2 px-3 text-xs font-medium text-gray-500 hover:text-primary-600 transition-colors duration-200;
+  }
+  
+  .mobile-nav-item.active {
+    @apply text-primary-600;
+  }
+  
+  .mobile-nav-item svg {
+    @apply w-6 h-6 mb-1;
+  }
+  
+  /* Enhanced coupon card */
   .coupon-card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 hover:shadow-md transition-shadow duration-200;
+    @apply bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 relative;
   }
   
+  .coupon-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1;
+    background: linear-gradient(90deg, #22C55E 0%, #F59E0B 100%);
+  }
+  
+  /* Loading spinner enhancement */
   .loading-spinner {
-    @apply inline-block w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin;
+    @apply inline-block w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Gradient headers */
+  .gradient-header {
+    background: linear-gradient(135deg, #22C55E 0%, #3B82F6 100%);
+    @apply text-white;
+  }
+  
+  /* Business category badges */
+  .category-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .category-food {
+    @apply bg-orange-100 text-orange-800;
+  }
+  
+  .category-retail {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  .category-health {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .category-entertainment {
+    @apply bg-purple-100 text-purple-800;
+  }
+  
+  .category-services {
+    @apply bg-pink-100 text-pink-800;
+  }
+  
+  /* Search bar enhancement */
+  .search-bar {
+    @apply relative;
+  }
+  
+  .search-input {
+    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500;
+  }
+  
+  .search-icon {
+    @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5;
   }
 }
 
@@ -73,9 +154,22 @@
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+  
+  /* Custom animations */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-bounce-subtle {
+    animation: bounceSubtle 2s infinite;
+  }
 }
 
-/* Mobile-first responsive design */
+/* Enhanced responsive design */
 @media (max-width: 640px) {
   .container {
     @apply px-4;
@@ -84,6 +178,60 @@
   .btn-primary,
   .btn-secondary,
   .btn-outline {
-    @apply w-full py-4 text-lg;
+    @apply w-full py-4 text-base font-semibold;
+  }
+  
+  .coupon-card {
+    @apply mx-2;
+  }
+  
+  .card-enhanced {
+    @apply mx-2;
+  }
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Print styles */
+@media print {
+  .mobile-nav,
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    @apply hidden;
   }
 }
