@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { MagnifyingGlassIcon, MapPinIcon, ClockIcon, TagIcon } from '@heroicons/react/24/outline'
 import { HeartIcon } from '@heroicons/react/24/solid'
-import { Coupon, Business } from '../../lib/supabase'
+import type { Coupon, Business } from '../../lib/supabase'
 import { useCoupons } from '../../hooks/useCoupons'
 import { useLocation } from '../../hooks/useLocation'
 import { CouponCard } from './CouponCard'

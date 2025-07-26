@@ -117,3 +117,5 @@ GoogleService-Info.plist
 
 # EAS
 .easignore
+# Local Netlify folder
+.netlify

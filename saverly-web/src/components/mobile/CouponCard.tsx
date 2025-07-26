@@ -3,7 +3,7 @@ import { MapPinIcon, ClockIcon, BuildingStorefrontIcon } from '@heroicons/react/
 import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid'
 import { Link } from 'react-router-dom'
-import { Coupon, Business } from '../../lib/supabase'
+import type { Coupon, Business } from '../../lib/supabase'
 
 interface CouponWithBusiness extends Coupon {
   business: Business
@@ -103,7 +103,7 @@ export function CouponCard({ coupon, distance }: CouponCardProps) {
         
         {/* Discount badge */}
         <div className="inline-flex items-center bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3">
-          {coupon.discount_amount}
+          {coupon.discount_type === 'percentage' ? `${coupon.discount_value}% off` : `$${coupon.discount_value} off`}
         </div>
       </div>
 
@@ -112,11 +112,11 @@ export function CouponCard({ coupon, distance }: CouponCardProps) {
         <div className="flex items-center space-x-4 text-sm text-gray-500">
           <div className="flex items-center space-x-1">
             <ClockIcon className="w-4 h-4" />
-            <span>{formatTimeRemaining(coupon.end_date)}</span>
+            <span>{formatTimeRemaining(coupon.valid_until)}</span>
           </div>
-          {coupon.usage_limit_type !== 'once' && (
+          {coupon.max_uses && (
             <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-              {coupon.usage_limit_type.replace('_', ' per ').replace('monthly', 'month')}
+              {coupon.max_uses} uses max
             </span>
           )}
         </div>
