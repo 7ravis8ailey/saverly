@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import { FullScreenLoader } from './components/ui/LoadingSpinner'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { EnvironmentCheck } from './components/EnvironmentCheck'
+import { Suspense } from 'react'
 
 // Admin Dashboard Components
 import { BusinessList } from './components/BusinessList'
@@ -16,31 +19,66 @@ import { MobileApp } from './components/mobile/MobileApp'
 import './App.css'
 
 function App() {
-  const { user, signOut, loading } = useAuth()
+  // Check environment variables first
+  const envCheck = EnvironmentCheck()
+  if (envCheck) return envCheck
 
-  if (loading) {
-    return <FullScreenLoader message="Loading Saverly..." />
-  }
+  try {
+    const { user, signOut, loading } = useAuth()
 
-  // Detect if we should show mobile or admin interface
-  // For now, we'll use a simple path-based detection
-  // In the future, this could be based on user roles or device detection
-  const isAdminRoute = window.location.pathname.startsWith('/admin')
+    if (loading) {
+      return <FullScreenLoader message="Loading Saverly..." />
+    }
 
-  if (isAdminRoute) {
+    // Detect if we should show mobile or admin interface
+    // For now, we'll use a simple path-based detection
+    // In the future, this could be based on user roles or device detection
+    const isAdminRoute = window.location.pathname.startsWith('/admin')
+
+    if (isAdminRoute) {
+      return (
+        <Router>
+          <AdminDashboard user={user} signOut={signOut} />
+        </Router>
+      )
+    }
+
+    // Default to mobile app
     return (
       <Router>
-        <AdminDashboard user={user} signOut={signOut} />
+        <MobileApp />
       </Router>
     )
+  } catch (error) {
+    console.error('App component error:', error)
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-2xl font-bold text-white">S</span>
+          </div>
+          <h1 className="text-2xl font-bold mb-2">
+            <span className="bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
+              Saverly
+            </span>
+          </h1>
+          <p className="text-gray-600 mb-4">Your Local Coupon Marketplace</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <h3 className="text-red-800 font-semibold mb-2">Loading Error</h3>
+            <p className="text-red-600 text-sm">
+              Unable to load the application. Please refresh to try again.
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    )
   }
-
-  // Default to mobile app
-  return (
-    <Router>
-      <MobileApp />
-    </Router>
-  )
 }
 
 // Admin Dashboard Component
