@@ -95,7 +95,11 @@ export function AboutSaverly() {
             <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShoppingBagIcon className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold mb-2">Saverly</h1>
+            <h1 className="text-3xl font-bold mb-2">
+              <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                Saverly
+              </span>
+            </h1>
             <p className="text-primary-100 text-lg">
               Your Local Coupon Marketplace
             </p>

@@ -58,7 +58,12 @@ function AdminDashboard({ user, signOut }: { user: any, signOut: () => void }) {
       <header className="app-header">
         <div className="container">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Saverly Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold">
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent cursor-pointer">
+                Saverly
+              </span>
+              <span className="text-gray-900 ml-2">Admin Dashboard</span>
+            </h1>
             {user ? (
               <div className="flex items-center space-x-6">
                 <nav className="flex space-x-4">

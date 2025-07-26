@@ -125,39 +125,32 @@ export function CouponFeed() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Enhanced Header */}
-      <div className="gradient-header safe-top">
+      {/* Simple Header */}
+      <div className="bg-white border-b border-gray-200 safe-top">
         <div className="px-4 py-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">
-                Local Deals
-                <span className="ml-3 text-xs bg-white/20 text-white px-3 py-1 rounded-full">
-                  <SparklesIcon className="w-3 h-3 inline mr-1" />
-                  Pro
-                </span>
-              </h1>
-              <p className="text-white/90 text-lg">
-                {location 
-                  ? `${displayCoupons?.length || 0} deals near you`
-                  : 'Enable location for personalized deals'
-                }
-              </p>
-            </div>
-            <button className="p-3 text-white/80 hover:text-white bg-white/10 rounded-full hover:bg-white/20 transition-all">
-              <HeartIcon className="w-6 h-6" />
-            </button>
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold">
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                Saverly
+              </span>
+            </h1>
+            <p className="text-gray-600 mt-2">
+              {location 
+                ? `${displayCoupons?.length || 0} deals near you`
+                : 'Enable location for personalized deals'
+              }
+            </p>
           </div>
 
-          {/* Enhanced Search Bar */}
-          <div className="search-bar">
-            <MagnifyingGlassIcon className="search-icon" />
+          {/* Search Bar */}
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Search deals, businesses, or categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input text-gray-900 placeholder-gray-500"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
             />
             <button
               onClick={() => setShowFilters(!showFilters)}

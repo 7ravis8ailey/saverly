@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MapPinIcon, ClockIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { MapPinIcon, ClockIcon, BuildingStorefrontIcon, TagIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid'
 import { Link } from 'react-router-dom'
@@ -13,6 +13,7 @@ interface CouponWithBusiness extends Coupon {
 interface CouponCardProps {
   coupon: CouponWithBusiness
   distance?: number
+  isManagement?: boolean
 }
 
 export function CouponCard({ coupon, distance }: CouponCardProps) {
@@ -48,86 +49,59 @@ export function CouponCard({ coupon, distance }: CouponCardProps) {
   }
 
   return (
-    <div className="coupon-card group">
-      {/* Header with business info and favorite button */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center space-x-3 flex-1">
-          <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-            {coupon.business?.logo_url ? (
-              <img
-                src={coupon.business.logo_url}
-                alt={coupon.business.name}
-                className="w-10 h-10 rounded-lg object-cover"
-              />
-            ) : (
-              <BuildingStorefrontIcon className="w-6 h-6 text-gray-400" />
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">
-              {coupon.business?.name}
-            </h3>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              {distance && (
-                <div className="flex items-center space-x-1">
-                  <MapPinIcon className="w-4 h-4" />
-                  <span>{formatDistance(distance)}</span>
-                </div>
-              )}
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(coupon.business?.category || '')}`}>
-                {coupon.business?.category?.replace(' & ', ' ')}
-              </span>
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={() => setIsFavorited(!isFavorited)}
-          className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200"
-        >
-          {isFavorited ? (
-            <HeartSolid className="w-5 h-5 text-red-500" />
-          ) : (
-            <HeartOutline className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-
-      {/* Coupon content */}
-      <div className="mb-4">
-        <h4 className="text-lg font-bold text-gray-900 mb-2">
-          {coupon.title}
-        </h4>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-          {coupon.description}
-        </p>
-        
-        {/* Discount badge */}
-        <div className="inline-flex items-center bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3">
-          {coupon.discount_type === 'percentage' ? `${coupon.discount_value}% off` : `$${coupon.discount_value} off`}
-        </div>
-      </div>
-
-      {/* Footer with time remaining and action button */}
-      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-        <div className="flex items-center space-x-4 text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <ClockIcon className="w-4 h-4" />
-            <span>{formatTimeRemaining(coupon.valid_until)}</span>
-          </div>
-          {coupon.max_uses && (
-            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-              {coupon.max_uses} uses max
+    <Link to={`/coupon/${coupon.id}`}>
+      <div className="relative overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow bg-white rounded-xl shadow-md border border-gray-100 p-6">
+        {/* Header */}
+        <div className="flex flex-col gap-1 mb-4">
+          <div className="flex items-center justify-between">
+            <span className="text-lg text-gray-600">
+              {coupon.business?.name || "Business Name Unavailable"}
             </span>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                setIsFavorited(!isFavorited)
+              }}
+              className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200"
+            >
+              {isFavorited ? (
+                <HeartSolid className="w-5 h-5 text-red-500" />
+              ) : (
+                <HeartOutline className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+          <span className="text-xl font-semibold text-gray-900">{coupon.title}</span>
+        </div>
+
+        {/* Content */}
+        <p className="text-gray-600 mb-4">{coupon.description}</p>
+        
+        {/* Details */}
+        <div className="space-y-2">
+          <div className="flex items-center text-sm text-gray-600">
+            <ClockIcon className="h-4 w-4 mr-2" />
+            Valid until {new Date(coupon.valid_until).toLocaleDateString()}
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-600">
+            <TagIcon className="h-4 w-4 mr-2" />
+            {coupon.discount_type === 'percentage' ? `${coupon.discount_value}% off` : `$${coupon.discount_value} off`}
+          </div>
+          
+          <div className="flex items-center text-sm text-gray-600">
+            <BuildingStorefrontIcon className="h-4 w-4 mr-2" />
+            {coupon.business?.name || "Business Name Unavailable"}
+          </div>
+          
+          {distance && (
+            <div className="flex items-center text-sm text-gray-600">
+              <MapPinIcon className="h-4 w-4 mr-2" />
+              {formatDistance(distance)} away
+            </div>
           )}
         </div>
-        
-        <Link
-          to={`/coupon/${coupon.id}`}
-          className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-        >
-          View Deal
-        </Link>
       </div>
-    </div>
+    </Link>
   )
 }
