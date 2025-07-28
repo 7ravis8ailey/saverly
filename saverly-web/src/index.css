@@ -22,7 +22,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
   padding: 32px;
-  background: linear-gradient(to bottom right, #f8fafc, #ffffff);
+  background: #ffffff;
 }
 
 .metric-card {
@@ -117,6 +117,24 @@ body {
 }
 
 @layer components {
+  /* Button Components */
+  .btn-primary {
+    @apply bg-primary-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-900 border border-gray-300 font-medium py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+
+  /* Safe Area Classes for Mobile */
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 1rem);
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+
   .card-hover {
     transition: all 0.2s ease;
     cursor: pointer;
@@ -131,25 +149,6 @@ body {
     transform: scale(0.98);
   }
 
-  .gradient-hover {
-    position: relative;
-    overflow: hidden;
-    transition: color 0.2s ease;
-    background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 100%);
-  }
-
-  .gradient-hover:before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    background: linear-gradient(120deg, var(--secondary) 0%, var(--primary) 100%);
-  }
-
-  .gradient-hover:hover:before {
-    opacity: 1;
-  }
 }
 
 @layer utilities {

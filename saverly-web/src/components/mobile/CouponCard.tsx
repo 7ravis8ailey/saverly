@@ -50,7 +50,7 @@ export function CouponCard({ coupon, distance }: CouponCardProps) {
 
   return (
     <Link to={`/coupon/${coupon.id}`}>
-      <div className="relative overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow bg-white rounded-xl shadow-md border border-gray-100 p-6">
+      <div className="relative overflow-hidden group cursor-pointer hover:border-gray-300 transition-colors bg-white rounded-lg border border-gray-200 p-6">
         {/* Header */}
         <div className="flex flex-col gap-1 mb-4">
           <div className="flex items-center justify-between">

@@ -7,7 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "claude:start": "npx claude-flow@alpha start --ui --port 4000",
+    "claude:sparc": "npx claude-flow@alpha sparc",
+    "claude:swarm": "npx claude-flow@alpha swarm",
+    "claude:tdd": "npx claude-flow@alpha sparc tdd",
+    "claude:architect": "npx claude-flow@alpha sparc run architect",
+    "claude:researcher": "npx claude-flow@alpha sparc run researcher",
+    "claude:analyzer": "npx claude-flow@alpha sparc run analyzer",
+    "claude:debugger": "npx claude-flow@alpha sparc run debugger",
+    "claude:status": "npx claude-flow@alpha status",
+    "claude:memory": "npx claude-flow@alpha memory"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.6",
@@ -16,9 +26,9 @@
     "@stripe/stripe-js": "^7.6.1",
     "@supabase/supabase-js": "^2.52.1",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^24.1.0",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.1",
     "lucide-react": "^0.525.0",
     "postcss": "^8.5.6",
     "qr-scanner": "^1.4.2",
@@ -29,7 +39,7 @@
     "react-router-dom": "^7.7.1",
     "recharts": "^3.1.0",
     "stripe": "^16.12.0",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^3.4.17",
     "zod": "^4.0.10"
   },
   "devDependencies": {

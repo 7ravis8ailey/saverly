@@ -5,16 +5,18 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { EnvironmentCheck } from './components/EnvironmentCheck'
 import { Suspense } from 'react'
 
-// Admin Dashboard Components
-import { BusinessList } from './components/BusinessList'
+// Core App Components
+import { AuthenticWelcomeScreen as WelcomeScreen } from './components/mobile/AuthenticWelcomeScreen'
+import { CouponFeed } from './components/mobile/CouponFeed'
+import { AboutSaverly } from './components/mobile/AboutSaverly'
 import { LoginForm } from './components/LoginForm'
 import { ProtectedRoute } from './components/ProtectedRoute'
+
+// Admin Dashboard Components
+import { BusinessList } from './components/BusinessList'
 import AnalyticsDashboard from './components/admin/AnalyticsDashboard'
 import CouponManagement from './components/admin/CouponManagement'
 import BusinessInsights from './components/admin/BusinessInsights'
-
-// Mobile App Components
-import { MobileApp } from './components/mobile/MobileApp'
 
 import './App.css'
 
@@ -30,23 +32,47 @@ function App() {
       return <FullScreenLoader message="Loading Saverly..." />
     }
 
-    // Detect if we should show mobile or admin interface
-    // For now, we'll use a simple path-based detection
-    // In the future, this could be based on user roles or device detection
-    const isAdminRoute = window.location.pathname.startsWith('/admin')
-
-    if (isAdminRoute) {
-      return (
-        <Router>
-          <AdminDashboard user={user} signOut={signOut} />
-        </Router>
-      )
-    }
-
-    // Default to mobile app
     return (
       <Router>
-        <MobileApp />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={user ? <Navigate to="/app" replace /> : <WelcomeScreen />} />
+          <Route path="/login" element={user ? <Navigate to="/app" replace /> : <LoginForm />} />
+          <Route path="/register" element={user ? <Navigate to="/app" replace /> : <LoginForm />} />
+          
+          {/* Main app routes */}
+          <Route path="/app" element={
+            <ProtectedRoute>
+              <CouponFeed />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/app/about" element={
+            <ProtectedRoute>
+              <AboutSaverly />
+            </ProtectedRoute>
+          } />
+
+          {/* Admin routes */}
+          <Route path="/admin/login" element={
+            user ? <Navigate to="/admin" replace /> : <LoginForm />
+          } />
+          
+          <Route path="/admin" element={
+            <ProtectedRoute adminOnly>
+              <AdminDashboard user={user} signOut={signOut} />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/admin/*" element={
+            <ProtectedRoute adminOnly>
+              <AdminDashboard user={user} signOut={signOut} />
+            </ProtectedRoute>
+          } />
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </Router>
     )
   } catch (error) {
@@ -54,13 +80,11 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-2xl font-bold text-white">S</span>
           </div>
-          <h1 className="text-2xl font-bold mb-2">
-            <span className="bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
-              Saverly
-            </span>
+          <h1 className="text-2xl font-bold mb-2 text-gray-900">
+            Saverly
           </h1>
           <p className="text-gray-600 mb-4">Your Local Coupon Marketplace</p>
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
@@ -97,7 +121,7 @@ function AdminDashboard({ user, signOut }: { user: any, signOut: () => void }) {
         <div className="container">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent cursor-pointer">
+              <span className="text-gray-900 cursor-pointer">
                 Saverly
               </span>
               <span className="text-gray-900 ml-2">Admin Dashboard</span>

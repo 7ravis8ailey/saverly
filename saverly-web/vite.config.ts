@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5174,
+    host: '127.0.0.1',
+    strictPort: false,
+    open: false,
     headers: {
       // Security headers
       'X-Frame-Options': 'DENY',

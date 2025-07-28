@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -14,9 +14,9 @@ export default {
           300: '#86efac',
           400: '#4ade80',
           500: '#3ABF7E',
-          600: '#2ea66a',
-          700: '#228b56',
-          800: '#1a6b44',
+          600: '#16A34A',
+          700: '#15803d',
+          800: '#166534',
           900: '#14532d',
         },
         secondary: {
@@ -42,6 +42,18 @@ export default {
           700: '#b45309',
           800: '#92400e',
           900: '#78350f',
+        },
+        navy: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#1e293b',
+          700: '#0f172a',
+          800: '#0f172a',
+          900: '#0f172a',
         }
       },
       fontFamily: {
